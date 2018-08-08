@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+    extract = require('..').extract,
+    path = require('path'),
+    args = process.argv;
+
+if (args.length < 3) {
+    console.log([
+        'USAGE:',
+        'extract path/to/source.md [path/to/target-xliff.xlf] [path/to/target-skeleton.md] [srcLang] [trgLang]',
+        'Example:',
+        'extract source.md source.xlf source.skl.md de-DE en-US'
+    ].join('\n'));
+
+    process.exit(1);
+}
+
+var markdownFileName = args[2],
+    sourceMd = fs.readFileSync(markdownFileName, 'utf8'),
+    fileNameWithoutExt = path.basename(markdownFileName, path.extname(markdownFileName)),
+    yamlFilename = fileNameWithoutExt + '.yml',
+    xliffFilename = args[3] || fileNameWithoutExt + '.xlf',
+    skeletonFilename = args[4] || fileNameWithoutExt + '.skl.md',
+    srcLang = args[5] || 'de-DE',
+    trgLang = args[6] || 'en-US';
+
+sourceMd = sourceMd.replace(/(\r\n|\r)/gm, '\n');
+
+if (sourceMd.startsWith('---\n') && (sourceMd.match(/\n---\n/g) || []).length === 1) {
+    var sourceParts = sourceMd.split('\n---\n');
+    var sourceYaml = sourceParts[0];
+    sourceMd = sourceParts[1];
+    var extracted = extract(sourceMd, markdownFileName, skeletonFilename, srcLang, trgLang);
+
+    fs.writeFileSync(yamlFilename, sourceYaml);
+    fs.writeFileSync(xliffFilename, extracted.xliff);
+    fs.writeFileSync(skeletonFilename, extracted.skeleton);
+} else
+    console.log('Invalid SR .md file.');
