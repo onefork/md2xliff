@@ -1,0 +1,31 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [{
+            "type": "node",
+            "request": "launch",
+            "name": "Extract",
+            "program": "${workspaceFolder}\\bin\\sr-extract",
+            "args": [
+                "2016-06-11-gespräch-mit-prof-dr-wieland-sommer.md"
+            ],
+            "env": {
+                // "SEGMENT_TEXT": "1"
+            }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Reconstruct",
+            "program": "${workspaceFolder}\\bin\\sr-xliff-reconstruct",
+            "args": [
+                "2016-06-11-gespräch-mit-prof-dr-wieland-sommer.yml", "2016-06-11-gespräch-mit-prof-dr-wieland-sommer.xlf", "2016-06-11-gespräch-mit-prof-dr-wieland-sommer.skl.md", "2016-06-11-gespräch-mit-prof-dr-wieland-sommer.translated.md"
+            ],
+            "env": {
+                "USE_SOURCE": "1"
+            }
+        }
+    ]
+}
