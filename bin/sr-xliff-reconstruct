@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+var fs = require('fs'),
+    xliffReconstruct = require('..').xliffReconstruct,
+    args = process.argv;
+
+if (args.length < 4) {
+    console.log('USAGE:\nxliffReconstruct path/to/xliff path/to/skeleton path/to/target.md');
+    process.exit(1);
+}
+
+var xliff = fs.readFileSync(args[2], 'utf8'),
+    skeleton = fs.readFileSync(args[3], 'utf8'),
+    targetMd = args[4];
+
+xliffReconstruct(xliff, skeleton, function(err, md) {
+    if (err) throw new Error(err);
+
+    fs.writeFileSync(targetMd, md);
+});
